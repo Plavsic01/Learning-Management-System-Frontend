@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" routerLink="/">Learning Management System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">        
+        <li *ngIf=" loginService.user && loginService.checkIfAllowed('ROLE_STUDENT')" class="nav-item">
+          <a class="nav-link" routerLink="/my-student">E - Portal<span class="sr-only">(current)</span></a>
+        </li>              
+        <li  class="nav-item dropdown" *ngIf="loginService.checkIfAllowed('ROLE_ADMIN')">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Admin Panel
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" routerLink="/address">Address</a>            
+            <a class="dropdown-item" routerLink="/cities">City</a>            
+            <a class="dropdown-item" routerLink="/countries">Country</a>                        
+            <div class="dropdown-divider"></div>                                              
+            <a class="dropdown-item" routerLink="/faculties">Faculty</a>
+            <a class="dropdown-item" routerLink="/study-programs">Study Programs</a>
+            <a class="dropdown-item" routerLink="/years-of-study">Year Of Study</a>    
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/users">User</a>                                               
+          </div>
+        </li>              
+      </ul>
+      <span *ngIf="loginService.user;else notLoggedIn">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item dropdown" style="margin-right:45px;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <mat-icon style="width: 35px; height: 35px;">account_circle</mat-icon>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" (click)="loginService.logOut()">Sign Out</a>
+            </div>           
+          </li>
+        </ul>
+        
+      </span>   
+    </div>
+  </nav>
+
+  <ng-template #notLoggedIn>
+    <a class="btn btn-outline-primary my-2 my-sm-0" routerLink="/login">Login</a>
+  </ng-template>

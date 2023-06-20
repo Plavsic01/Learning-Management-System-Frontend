@@ -1,0 +1,72 @@
+<div class="mat-elevation-z8" class="full-width-table">
+    <table mat-table [dataSource]="dataSource" matSort aria-label="Elements">
+      
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let row">{{row.id}}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>City Name</th>
+        <td mat-cell *matCellDef="let row">{{row.name}}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="country">
+        <th mat-header-cell *matHeaderCellDef>Country Name</th>
+        <td mat-cell *matCellDef="let row">{{row.country.name}}</td>
+      </ng-container>
+
+      
+      <ng-container matColumnDef="details">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Actions</th>        
+          <td mat-cell *matCellDef="let element" style="text-align: center;">
+
+            <button (click)="deleteCity(element.id)" mat-fab style="width: 40px; height: 40px; margin-right: 7px;" color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+            <button (click)="data(element)"mat-fab style="width: 40px; height: 40px; background-color: rgb(86, 166, 86);">
+              <mat-icon>edit</mat-icon>
+            </button>   
+          </td>                  
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator #paginator      
+        [pageIndex]="0"
+        [pageSize]="5"
+        [pageSizeOptions]="[1,5,10,20]"
+        aria-label="Select page">
+    </mat-paginator>
+  </div>
+  <br>
+  <hr>
+
+  <div style="text-align: center;">
+    <button (click)="showForm()" class="form-btn" mat-raised-button type="button">{{!isOpened ? 'Show Form' : 'Close Form'}}</button>
+    </div>
+
+<div *ngIf="isOpened" style="width: 20%; margin: 80px auto;padding: 30px;border-radius: 8px;background-color: rgb(77, 83, 96);
+    box-shadow: 1px 8px 3px rgb(77, 83, 96);">
+    <form action="" style="display: flex;flex-direction: column;" (submit)="create()" [formGroup]="cityForm">
+      <mat-form-field>
+        <mat-label>Enter City Name:</mat-label>
+        <input type="text" matInput formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field formGroupName="country">
+        <mat-label>Choose Country:</mat-label>
+        <mat-select formControlName="id">
+          <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>        
+        </mat-select>
+      </mat-form-field>
+      <div style="width: 100%;text-align:center;">
+        <hr style="background-color: rgb(222, 215, 215);">
+          <button class="form-btn" style="margin-right: 20px;" mat-raised-button type="submit">{{ cityForm.get("id")?.value == undefined ? 'Add' : 'Edit'}}</button>
+          <button class="form-btn" mat-raised-button (click)="reset()" type="button">Reset</button>
+      </div>
+  </form>
+</div>

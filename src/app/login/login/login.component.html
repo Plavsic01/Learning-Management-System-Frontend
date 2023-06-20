@@ -1,0 +1,29 @@
+<div style="display: flex;justify-content: center;align-items: center;height: 80vh;">
+
+    <div style="height: 300px; width: 300px; background-color: #4c525f;padding:20px;border: 1px solid #353943; border-radius: 10px;
+    box-shadow: 1px 8px 8px rgb(0, 0, 0,0.8);">
+
+    <form style="display: flex;flex-direction: column; justify-content: center;align-items: center;" 
+    [formGroup]="loginForm" (submit)="login()">
+
+    <h2 style="color: rgb(222, 215, 215);">E - PORTAL</h2>
+
+    <div>
+        <mat-form-field appearance="outline">
+        <mat-label style="color: rgb(222, 215, 215);">Enter username:</mat-label>
+        <input formControlName="username" matInput placeholder="Username">            
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field appearance="outline">
+        <mat-label style="color: rgb(222, 215, 215);">Enter password:</mat-label>
+        <input type="password" formControlName="password" matInput placeholder="Password">
+        </mat-form-field>
+    </div>
+
+    <button class="btn" type="submit" style="background-color:rgb(222, 215, 215);color: #353943;" mat-raised-button color="primary">Login</button>
+    </form>
+
+    </div>
+
+</div>  

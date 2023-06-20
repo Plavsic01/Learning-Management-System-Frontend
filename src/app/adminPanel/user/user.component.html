@@ -1,0 +1,133 @@
+<mat-tab-group class="custom-tab-group">
+  <mat-tab label="Users">
+  
+<div class="mat-elevation-z8" class="full-width-table">
+    <table mat-table [dataSource]="dataSource" matSort aria-label="Elements">
+      
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let row">{{row.id}}</td>
+      </ng-container>
+        
+      <ng-container matColumnDef="first_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
+        <td mat-cell *matCellDef="let row">{{row.firstName}}</td>
+      </ng-container>
+      <ng-container matColumnDef="last_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+        <td mat-cell *matCellDef="let row">{{row.lastName}}</td>
+      </ng-container>
+      <ng-container matColumnDef="dob">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Of Birth</th>
+        <td mat-cell *matCellDef="let row">{{row.dob}}</td>
+      </ng-container>
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Number</th>
+        <td mat-cell *matCellDef="let row">{{row.phone}}</td>
+      </ng-container>
+      <ng-container matColumnDef="jmbg">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>JMBG</th>
+        <td mat-cell *matCellDef="let row">{{row.jmbg}}</td>
+      </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let row">{{row.email}}</td>
+      </ng-container>
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+        <td mat-cell *matCellDef="let row">{{row.username}}</td>
+      </ng-container>      
+      
+      <ng-container matColumnDef="details">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Actions</th>        
+          <td mat-cell *matCellDef="let element" style="text-align: center;">            
+            <button (click)="deleteUser(element.id)" mat-fab style="width: 40px; height: 40px; margin-right: 7px;" color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+            <button (click)="data(element)"mat-fab style="width: 40px; height: 40px; background-color: rgb(86, 166, 86);">
+              <mat-icon>edit</mat-icon>
+            </button> 
+          </td>                  
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator #paginator      
+        [pageIndex]="0"
+        [pageSize]="5"
+        [pageSizeOptions]="[1,5,10,20]"
+        aria-label="Select page">
+    </mat-paginator>
+  </div>
+  <br>
+  <hr>
+
+  <div style="text-align: center;">
+    <button (click)="showForm()" class="form-btn" mat-raised-button type="button">{{!isOpened ? 'Show Form' : 'Close Form'}}</button>
+    <p></p>
+  </div>
+  
+
+<div *ngIf="isOpened" style="width: 20%; margin: 80px auto;padding: 30px;border-radius: 8px;background-color: rgb(77, 83, 96);
+    box-shadow: 1px 8px 3px rgb(77, 83, 96);">
+    <form action="" style="display: flex;flex-direction: column;" (submit)="create()" [formGroup]="userForm">
+    
+      <mat-form-field>
+        <mat-label>Enter First Name:</mat-label>
+        <input type="text" matInput formControlName="firstName">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Enter Last Name:</mat-label>
+        <input type="text" matInput formControlName="lastName">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Date Of Birth:</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dob">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Phone:</mat-label>
+        <input type="text" matInput formControlName="phone">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>JMBG:</mat-label>
+        <input type="text" matInput formControlName="jmbg">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email:</mat-label>
+        <input type="email" matInput formControlName="email">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Username:</mat-label>
+        <input type="text" matInput formControlName="username">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password:</mat-label>
+        <input type="password" matInput formControlName="password">
+      </mat-form-field>
+  
+      <div style="width: 100%;text-align:center;">
+        <hr style="background-color: rgb(222, 215, 215);">
+          <button class="form-btn" style="margin-right: 20px;" mat-raised-button type="submit">{{ userForm.get("id")?.value == undefined ? 'Add' : 'Edit'}}</button>
+          <button class="form-btn" mat-raised-button (click)="reset()" type="button">Reset</button>          
+      </div>      
+  </form>
+</div>
+</mat-tab>
+
+<mat-tab label="Privileges"><app-privilege></app-privilege></mat-tab>
+<mat-tab label="User Privileges"><app-user-privilege></app-user-privilege></mat-tab>
+
+</mat-tab-group>

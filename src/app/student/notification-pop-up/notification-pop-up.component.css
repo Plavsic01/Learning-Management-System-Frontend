@@ -1,0 +1,10 @@
+.pop-up-div {
+    width: 700px;
+    padding:10px;    
+    text-align: justify;
+    color: #4c525f;
+}
+
+.pop-up-div h2 {
+    text-transform: capitalize;
+}

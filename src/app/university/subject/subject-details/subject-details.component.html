@@ -1,0 +1,15 @@
+<div class="pop-up-div">    
+    <h1 style="text-align: center; font-weight: 700; text-transform: uppercase;">{{data.name}}</h1>
+    <hr>    
+    <h2>Year Of Study: {{data.yearOfStudy.year}}</h2>
+    <h2>ECTS:{{data.ects}}</h2>
+    <h2>Mandatory Subject: {{data.mandatorySubject}}</h2>
+    <h2>Number Of Semesters: {{data.numberOfSemesters}}</h2>
+    <h2>Number Of Lectures: {{data.numberOfLectures}}</h2>
+    <h2>Number Of Practical Lectures: {{data.numberOfPracticalLectures}}</h2>
+    <span *ngFor="let teacher of data.teachersOnRealisation">
+        <h2>Teacher: {{teacher.teacherId}}</h2>          
+      </span>
+    <hr>
+    <h2>Syllabus: {{data.syllabus}}</h2>
+</div>
