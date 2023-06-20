@@ -8,7 +8,25 @@
       <ul class="navbar-nav mr-auto">        
         <li *ngIf=" loginService.user && loginService.checkIfAllowed('ROLE_STUDENT')" class="nav-item">
           <a class="nav-link" routerLink="/my-student">E - Portal<span class="sr-only">(current)</span></a>
-        </li>              
+        </li> 
+
+        <li *ngIf="loginService.user && loginService.checkIfAllowed('ROLE_STUDENT_ADMINISTRATION')" class="nav-item">
+          <a class="nav-link" routerLink="/student-administration">Student Administration<span class="sr-only">(current)</span></a>
+        </li>
+
+        <ul *ngIf="loginService.user && loginService.checkIfAllowed('ROLE_STUDENT_ADMINISTRATION')" class="navbar-nav mr-auto">
+          <li class="nav-item dropdown" style="margin-right:45px;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Generate Documents              
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" (click)="generateStudentPDF()">Generate Students PDF</a>
+              <div class="dropdown-divider"></div>                               
+              <a class="dropdown-item" routerLink="/">Generate Students XML</a>
+            </div>           
+          </li>
+        </ul>
+
         <li  class="nav-item dropdown" *ngIf="loginService.checkIfAllowed('ROLE_ADMIN')">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Admin Panel
@@ -20,7 +38,8 @@
             <div class="dropdown-divider"></div>                                              
             <a class="dropdown-item" routerLink="/faculties">Faculty</a>
             <a class="dropdown-item" routerLink="/study-programs">Study Programs</a>
-            <a class="dropdown-item" routerLink="/years-of-study">Year Of Study</a>    
+            <a class="dropdown-item" routerLink="/years-of-study">Year Of Study</a> 
+            <a class="dropdown-item" routerLink="/subjects">Subjects</a>    
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" routerLink="/users">User</a>                                               
           </div>
@@ -33,6 +52,8 @@
               <mat-icon style="width: 35px; height: 35px;">account_circle</mat-icon>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" routerLink="/my-profile">My Profile</a>
+              <div class="dropdown-divider"></div>                 
               <a class="dropdown-item" (click)="loginService.logOut()">Sign Out</a>
             </div>           
           </li>

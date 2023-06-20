@@ -11,9 +11,9 @@ import { CityComponent } from './adminPanel/city/city.component';
 import { CountryComponent } from './adminPanel/country/country.component';
 import { auth } from './guard/auth.guard';
 import { UserComponent } from './adminPanel/user/user.component';
-import { PassedSubjectsComponent } from './student/passed-subjects/passed-subjects.component';
 import { StudentSubjectsComponent } from './student/student-subjects/student-subjects.component';
-// import { PrivilegeComponent } from './adminPanel/privilege/privilege.component';
+import { MyProfileComponent } from './profile/my-profile/my-profile.component';
+import { StudentAdministrationComponent } from './studentAdministration/student-administration/student-administration.component';
 
 
 const routes: Routes = [
@@ -43,9 +43,12 @@ const routes: Routes = [
   {path:"my-student",component:StudentSubjectsComponent,data:{roles:["ROLE_STUDENT"]},
   canActivate:[auth]
   },
-  // {path:"privileges",component:PrivilegeComponent,data:{roles:["ROLE_ADMIN"]},
-  // canActivate:[auth]
-  // }
+  {path:"my-profile",component:MyProfileComponent,data:{roles:["ROLE_ADMIN","ROLE_STUDENT"]},
+  canActivate:[auth]
+  },
+  {path:"student-administration",component:StudentAdministrationComponent,data:{roles:["ROLE_STUDENT_ADMINISTRATION"]},
+  canActivate:[auth]
+  },
   { path: '**', redirectTo: '/' }
 
 

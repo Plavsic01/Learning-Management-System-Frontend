@@ -16,6 +16,10 @@ export class StudentService {
     return this.http.get<any>(`http://localhost:8080/api/user/students/${id}`);
   }
 
+  generateStudentsPDF(){        
+    return this.http.get<any>("http://localhost:8080/api/user/students/generate/pdf",{responseType:'blob' as 'json'});
+  }
+
   getStudentByUserId(id:number){    
     return this.http.get<any>(`http://localhost:8080/api/user/students/userId/${id}`);
   }

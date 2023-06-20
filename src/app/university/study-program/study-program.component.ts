@@ -47,6 +47,7 @@ export class StudyProgramComponent {
     this.studyProgramForm.patchValue(element);
     this.showForm();
   }
+  
 
   studyProgramForm = new FormGroup({
     id:new FormControl(),

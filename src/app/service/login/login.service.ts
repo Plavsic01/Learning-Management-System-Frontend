@@ -37,17 +37,29 @@ export class LoginService {
   }
 
   checkUserPrivileges(requiredPrivileges:any){
-    if(this.user){  
-      let index = 0;    
-      for(let r of requiredPrivileges){        
-        if(this.user["roles"][index]["authority"].includes(r)){
-          return true;          
-        }
-        index++;
+    if(this.user){     
+
+      let foundRoles:string[] = [];
+
+      for(let r of requiredPrivileges){
+      
+        const matchedRoles = this.user['roles'].filter(function(item: any){
+          if(item.authority == r){
+            foundRoles.push(r);
+            }          
+            return item.authority == r;
+        })
       } 
+
+      for(let foundRole of foundRoles){
+        if(requiredPrivileges.includes(foundRole)){
+          return true;
+        }
+      }
     }
     return false;
   }
+
 
   checkIfAllowed(userRole:string){
     if(this.user){
@@ -59,6 +71,7 @@ export class LoginService {
     }
     return false;
   }
+  
 
   logOut(){
     this._user = null;

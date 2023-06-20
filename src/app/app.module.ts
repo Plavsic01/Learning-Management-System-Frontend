@@ -24,6 +24,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatRadioModule} from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 
@@ -43,6 +45,9 @@ import { PassedSubjectsComponent } from './student/passed-subjects/passed-subjec
 import { CurrentSubjectsComponent } from './student/current-subjects/current-subjects.component';
 import { StudentSubjectsComponent } from './student/student-subjects/student-subjects.component';
 import { NotificationPopUpComponent } from './student/notification-pop-up/notification-pop-up.component';
+import { MyProfileComponent } from './profile/my-profile/my-profile.component';
+import { StudentAdministrationComponent } from './studentAdministration/student-administration/student-administration.component';
+import { StudentDetailsPopUpComponent } from './studentAdministration/student-details-pop-up/student-details-pop-up.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +70,9 @@ import { NotificationPopUpComponent } from './student/notification-pop-up/notifi
     CurrentSubjectsComponent,
     StudentSubjectsComponent,
     NotificationPopUpComponent,
+    MyProfileComponent,
+    StudentAdministrationComponent,
+    StudentDetailsPopUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,7 +94,9 @@ import { NotificationPopUpComponent } from './student/notification-pop-up/notifi
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTabsModule
+    MatTabsModule,
+    MatRadioModule,
+    MatCheckboxModule
   ],
   providers: [{provide:HTTP_INTERCEPTORS,useClass:LoginInterceptor,multi:true}],
   bootstrap: [AppComponent]

@@ -1,0 +1,38 @@
+<h2 *ngIf="loginService.checkIfAllowed('ROLE_STUDENT')">Student Details</h2>
+
+<h2 *ngIf="loginService.checkIfAllowed('ROLE_ADMIN')">Administrator Details</h2>
+<br>
+<hr>
+
+<div *ngIf="(currentUser | json) != '{}' && loginService.checkIfAllowed('ROLE_STUDENT')" style="display: flex;justify-content: center;">
+    <div>
+
+        <div *ngFor="let studentYear of currentUser.studentYears">
+            <h3>Index Number: {{studentYear.indexNo}}</h3>
+            <h3>Study Program: {{studentYear.yearOfStudy.studyProgram.name}}</h3>
+        </div>
+
+        <h3>First Name: <h3 class="style-h3">{{currentUser.user.firstName}}</h3></h3>
+        <h3>Last Name:<h3 class="style-h3">{{currentUser.user.lastName}}</h3></h3>
+        <h3>Email:<h3 class="style-h3">{{currentUser.user.email}}</h3></h3>
+        <h3>Username:<h3 class="style-h3">{{currentUser.user.username}}</h3></h3>
+        <h3>Phone Number:<h3 class="style-h3">{{currentUser.user.phone}}</h3></h3>
+        <h3>Jmbg:<h3 class="style-h3">{{currentUser.user.jmbg}}</h3></h3>
+        <h3>Date Of Birth:<h3 class="style-h3">{{currentUser.user.dob}}</h3></h3>        
+    </div>
+    
+</div>
+
+<div *ngIf="(currentUser | json) != '{}' && loginService.checkIfAllowed('ROLE_ADMIN')" style="display: flex;justify-content: center;">
+    <div>
+        
+        <h3>First Name: <h3 class="style-h3">{{currentUser.firstName}}</h3></h3>
+        <h3>Last Name:<h3 class="style-h3">{{currentUser.lastName}}</h3></h3>
+        <h3>Email:<h3 class="style-h3">{{currentUser.email}}</h3></h3>
+        <h3>Username:<h3 class="style-h3">{{currentUser.username}}</h3></h3>
+        <h3>Phone Number:<h3 class="style-h3">{{currentUser.phone}}</h3></h3>
+        <h3>Jmbg:<h3 class="style-h3">{{currentUser.jmbg}}</h3></h3>
+        <h3>Date Of Birth:<h3 class="style-h3">{{currentUser.dob}}</h3></h3>        
+    </div>
+    
+</div>
