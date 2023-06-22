@@ -67,10 +67,11 @@ export class FacultyNotificationsComponent {
   create(){
     if(this.facultyNotificationForm.valid){
 
-      let selectedDate:Date | null | undefined = this.facultyNotificationForm.value.dateOfNotification;
-        selectedDate!.setHours(selectedDate!.getHours() + 2);
+      let selectedDate:any = new Date(this.facultyNotificationForm.value.dateOfNotification!);
+            
+      selectedDate.setHours(selectedDate!.getHours() + 2);
 
-        this.facultyNotificationForm.value.dateOfNotification = selectedDate;
+      this.facultyNotificationForm.value.dateOfNotification = selectedDate;
       
       if(this.facultyNotificationForm.value.id != null && this.facultyNotificationForm.value.id != undefined){
         this.facultyNotificationService.update(this.facultyNotificationForm.value.id,this.facultyNotificationForm.value).subscribe((response => {

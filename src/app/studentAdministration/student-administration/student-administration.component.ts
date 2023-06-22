@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
 import { YearOfStudyService } from 'src/app/service/YearOfStudy/year-of-study.service';
 import { LoginService } from 'src/app/service/login/login.service';
 import { StudentYearService } from 'src/app/service/student/student-year.service';
@@ -82,6 +81,12 @@ fetchYearsOfStudy(){
 create(){
   if(this.studentServiceForm.valid){
 
+    let selectedDate:any = new Date(this.studentServiceForm.value.dateOfEnrollment!);
+            
+      selectedDate.setHours(selectedDate!.getHours() + 2);
+
+      this.studentServiceForm.value.dateOfEnrollment = selectedDate;
+
     let formValues = {
       "id":this.studentServiceForm.value.id,
       "indexNo":this.studentServiceForm.value.indexNo,
@@ -107,6 +112,12 @@ create(){
 
 reset(){
   this.studentServiceForm.reset();        
+}
+
+deleteStudentYear(id:number){
+  this.studentYearService.delete(id).subscribe((response => {
+    this.fetchStudentYear();
+  }))
 }
 
 showForm(){

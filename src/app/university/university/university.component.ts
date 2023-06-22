@@ -70,6 +70,13 @@ export class UniversityComponent  {
 
   create(){
     if(this.universityForm.valid){
+
+      let selectedDate:any = new Date(this.universityForm.value.dateOfEstablishment!);
+            
+      selectedDate.setHours(selectedDate!.getHours() + 2);
+
+      this.universityForm.value.dateOfEstablishment = selectedDate;
+
       if(this.universityForm.value.id != null && this.universityForm.value.id != undefined){
         this.universityService.update(this.universityForm.value.id,this.universityForm.value).subscribe((response => {
           this.fetchUniversities();            

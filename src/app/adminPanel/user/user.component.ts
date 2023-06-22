@@ -55,6 +55,13 @@ export class UserComponent {
 
   create(){
     if(this.userForm.valid){
+
+      let selectedDate:any = new Date(this.userForm.value.dob!);
+            
+      selectedDate.setHours(selectedDate!.getHours() + 2);
+
+      this.userForm.value.dob = selectedDate;
+
       if(this.userForm.value.id != null && this.userForm.value.id != undefined){
 
         if(this.userForm.value.password == null || this.userForm.value.password == ''){
