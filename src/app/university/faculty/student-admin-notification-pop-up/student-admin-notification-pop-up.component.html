@@ -1,0 +1,11 @@
+<cdk-virtual-scroll-viewport itemSize="10" class="example-viewport"> 
+    <h2 style="text-align: center;color: #4c525f;margin-top:15px;">Notifications</h2>       
+    <h2 style="text-align: center;color: #4c525f;margin-top: 15px;" *ngIf="data.length == 0">There are no notifications for this faculty!</h2>
+    <hr>
+    <div *cdkVirtualFor="let r of data" class="example-item">
+        <h2>{{r.title}}</h2>
+        <p>Description: {{r.description}}</p>
+        <p>Date Of Notification: {{r.dateOfNotification}}</p>
+        <br>  
+    </div>
+  </cdk-virtual-scroll-viewport>

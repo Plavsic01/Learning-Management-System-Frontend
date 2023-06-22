@@ -47,8 +47,7 @@ export class CurrentSubjectsComponent {
       this.notificationDialog.open(NotificationPopUpComponent,{
         data:response
       })
-    }))
-    
+    }))    
   }
 
 }

@@ -1,0 +1,16 @@
+<form action="" style="display: flex;flex-direction: column; width: 30%; margin:auto" (submit)="createPDF()" [formGroup]="studentServiceForm">
+
+   <mat-form-field>  
+       <mat-label>Choose Student:</mat-label>
+       <mat-select formControlName="student">
+         <mat-option *ngFor="let student of students" [value]="student.id">{{student.user.firstName}} {{student.user.lastName}}</mat-option>        
+       </mat-select>
+   </mat-form-field>      
+
+
+   <div style="width: 100%;text-align:center;">
+     <hr style="background-color: rgb(222, 215, 215);">
+       <button class="form-btn" style="margin-right: 20px;" mat-raised-button type="submit">Generate PDF</button>
+       <button class="form-btn" mat-raised-button (click)="reset()" type="button">Reset</button>
+   </div>
+</form>

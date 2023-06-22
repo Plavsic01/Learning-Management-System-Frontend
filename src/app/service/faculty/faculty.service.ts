@@ -20,6 +20,10 @@ export class FacultyService {
     return this.http.get<any>(`http://localhost:8080/api/university/faculty/universityId/${id}`);
   }
 
+  getNotificationsFromFacultyId(id:number){    
+    return this.http.get<any>(`http://localhost:8080/api/university/notification/facultyId/${id}`);
+  }
+
   create(faculty:any){
     return this.http.post<any>("http://localhost:8080/api/university/faculty",faculty);
   }

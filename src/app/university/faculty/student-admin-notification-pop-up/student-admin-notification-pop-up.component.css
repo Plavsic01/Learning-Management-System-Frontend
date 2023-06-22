@@ -1,0 +1,13 @@
+
+.example-viewport {
+    height: 500px;
+    width: 1500px;
+    border: 1px solid rgb(43, 43, 43);
+  }
+  
+  .example-item {
+    padding:10px;    
+    text-align: justify;
+    color: #4c525f;
+    height: 150px;
+  }

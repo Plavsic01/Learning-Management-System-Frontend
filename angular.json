@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "jspdf"
+            ],
             "outputPath": "dist/learning-management-system",
             "index": "src/index.html",
             "main": "src/main.ts",

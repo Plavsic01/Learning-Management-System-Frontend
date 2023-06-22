@@ -25,7 +25,8 @@ export class UserComponent {
     this.fetchUsers();      
   }
 
-  data(element:any){    
+  data(element:any){
+    delete element['password'];
     this.userForm.patchValue(element);
     this.showForm();
   }
@@ -36,11 +37,11 @@ export class UserComponent {
     firstName:new FormControl(null,Validators.required),
     lastName:new FormControl(null,Validators.required),    
     dob:new FormControl(null,Validators.required),    
-    phone:new FormControl(null,[Validators.required,Validators.minLength(9),Validators.maxLength(10),Validators.pattern(/^[0-9]\d*$/)]),    
+    phone:new FormControl(null,[Validators.required,Validators.pattern(/^(\+0?1\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/)]),    
     jmbg:new FormControl(null,[Validators.required,Validators.pattern(/^(\d{13})$/)]),    
     email:new FormControl(null,[Validators.required,Validators.email]),    
-    username:new FormControl(null,Validators.required),        
-    password:new FormControl(null,Validators.required),    
+    username:new FormControl(null,Validators.required),            
+    password:new FormControl(null,[Validators.maxLength(15)])    
     });
 
 
@@ -55,10 +56,19 @@ export class UserComponent {
   create(){
     if(this.userForm.valid){
       if(this.userForm.value.id != null && this.userForm.value.id != undefined){
-        this.userService.update(this.userForm.value.id,this.userForm.value).subscribe((response => {
-          this.fetchUsers();            
-        }));
 
+        if(this.userForm.value.password == null || this.userForm.value.password == ''){
+          this.userService.getUser(this.userForm.value.id).subscribe((response => {
+            this.userForm.value.password = response['password'];
+            this.userService.update(this.userForm.value.id,this.userForm.value).subscribe((response => {
+              this.fetchUsers();            
+            }));
+          }))
+        }else{
+          this.userService.update(this.userForm.value.id,this.userForm.value).subscribe((response => {
+            this.fetchUsers();            
+          }));
+        }             
       }else{        
           this.userService.create(this.userForm.value).subscribe((response => {
           this.fetchUsers();            

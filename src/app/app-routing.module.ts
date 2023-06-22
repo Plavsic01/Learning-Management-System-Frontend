@@ -14,6 +14,8 @@ import { UserComponent } from './adminPanel/user/user.component';
 import { StudentSubjectsComponent } from './student/student-subjects/student-subjects.component';
 import { MyProfileComponent } from './profile/my-profile/my-profile.component';
 import { StudentAdministrationComponent } from './studentAdministration/student-administration/student-administration.component';
+import { FacultyNotificationsComponent } from './studentAdministration/faculty-notifications/faculty-notifications.component';
+import { IssueCertificateComponent } from './studentAdministration/issue-certificate/issue-certificate.component';
 
 
 const routes: Routes = [
@@ -43,10 +45,16 @@ const routes: Routes = [
   {path:"my-student",component:StudentSubjectsComponent,data:{roles:["ROLE_STUDENT"]},
   canActivate:[auth]
   },
-  {path:"my-profile",component:MyProfileComponent,data:{roles:["ROLE_ADMIN","ROLE_STUDENT"]},
+  {path:"my-profile",component:MyProfileComponent,data:{roles:["ROLE_ADMIN","ROLE_STUDENT","ROLE_STUDENT_ADMINISTRATION"]},
   canActivate:[auth]
   },
   {path:"student-administration",component:StudentAdministrationComponent,data:{roles:["ROLE_STUDENT_ADMINISTRATION"]},
+  canActivate:[auth]
+  },
+  {path:"student-administration/notifications",component:FacultyNotificationsComponent,data:{roles:["ROLE_STUDENT_ADMINISTRATION"]},
+  canActivate:[auth]
+  },
+  {path:"student-administration/issue-certificate",component:IssueCertificateComponent,data:{roles:["ROLE_STUDENT_ADMINISTRATION"]},
   canActivate:[auth]
   },
   { path: '**', redirectTo: '/' }

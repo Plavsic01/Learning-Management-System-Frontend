@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +9,7 @@ import { AddressService } from 'src/app/service/address/address.service';
 import { FacultyService } from 'src/app/service/faculty/faculty.service';
 import { LoginService } from 'src/app/service/login/login.service';
 import { UniversityService } from 'src/app/service/university/university.service';
+import { StudentAdminNotificationPopUpComponent } from './student-admin-notification-pop-up/student-admin-notification-pop-up.component';
 
 @Component({
   selector: 'app-faculty',
@@ -17,7 +19,7 @@ import { UniversityService } from 'src/app/service/university/university.service
 export class FacultyComponent {
 
   dataSource!:MatTableDataSource<any>;
-  displayedColumns = ['id', 'name','address','details'];
+  displayedColumns = ['id', 'name','address','deanId','details'];
   @ViewChild(MatSort) sort!:MatSort;
   @ViewChild(MatPaginator) paginator!:MatPaginator;
 
@@ -28,7 +30,7 @@ export class FacultyComponent {
   isOpened:boolean = false;
   
   constructor(private facultyService:FacultyService,private addressService:AddressService,private universityService:UniversityService,
-    public loginService:LoginService,private router:Router,private route: ActivatedRoute) {}
+    private notificationsDetails:MatDialog,public loginService:LoginService,private router:Router,private route: ActivatedRoute) {}
  
   ngOnInit(){  
     this.route.params.subscribe(param => {
@@ -83,6 +85,12 @@ export class FacultyComponent {
     });
   }
 
+  fetchFacultyNotifications(facultyId:number){
+    this.facultyService.getNotificationsFromFacultyId(facultyId).subscribe((response => {
+      console.log(response);      
+    }))
+  }
+
   getAddresses(){
     this.addressService.getAddresses().subscribe((response=>{
       this.addresses = response;      
@@ -129,6 +137,14 @@ export class FacultyComponent {
     if(!this.isOpened){
       this.reset();
     }
+  }
+
+  showNotifications(facultyId:number){
+    this.facultyService.getNotificationsFromFacultyId(facultyId).subscribe((response => {
+      this.notificationsDetails.open(StudentAdminNotificationPopUpComponent,{
+        data:response
+      })
+    }))    
   }
 
 }

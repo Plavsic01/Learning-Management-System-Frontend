@@ -42,7 +42,7 @@ export class UniversityComponent  {
     name:new FormControl(null,Validators.required),
     email:new FormControl(null,[Validators.required,Validators.email]),
     dateOfEstablishment:new FormControl(null,Validators.required),
-    phone:new FormControl(null,[Validators.required,Validators.minLength(9),Validators.maxLength(10),Validators.pattern(/^[0-9]\d*$/)]),
+    phone:new FormControl(null,[Validators.required,Validators.pattern(/^(\+0?1\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/)]),
     rectorId:new FormControl(null,Validators.required),    
     address:new FormGroup({
       id:new FormControl(null,Validators.required)

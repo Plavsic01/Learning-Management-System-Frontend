@@ -1,15 +1,18 @@
-<h2 *ngIf="loginService.checkIfAllowed('ROLE_STUDENT')">Student Details</h2>
+<h2 *ngIf="loginService.checkIfAllowed('ROLE_STUDENT')" style="margin-left: 70px;margin-top: 10px;">Student Details</h2>
 
-<h2 *ngIf="loginService.checkIfAllowed('ROLE_ADMIN')">Administrator Details</h2>
-<br>
+<h2 *ngIf="loginService.checkIfAllowed('ROLE_ADMIN')" style="margin-left: 70px;margin-top: 10px;">Administrator Details</h2>
+
+<h2 *ngIf="loginService.checkIfAllowed('ROLE_STUDENT_ADMINISTRATION')" style="margin-left: 70px;margin-top: 10px;">Student Service Details</h2>
+
 <hr>
 
-<div *ngIf="(currentUser | json) != '{}' && loginService.checkIfAllowed('ROLE_STUDENT')" style="display: flex;justify-content: center;">
+<div *ngIf="(currentUser | json) != '{}' && loginService.checkIfAllowed('ROLE_STUDENT')" style="display: flex;justify-content: center; flex-direction: column; align-items: center;margin-top: 50px;">
     <div>
 
         <div *ngFor="let studentYear of currentUser.studentYears">
             <h3>Index Number: {{studentYear.indexNo}}</h3>
             <h3>Study Program: {{studentYear.yearOfStudy.studyProgram.name}}</h3>
+            <hr>
         </div>
 
         <h3>First Name: <h3 class="style-h3">{{currentUser.user.firstName}}</h3></h3>
@@ -18,12 +21,16 @@
         <h3>Username:<h3 class="style-h3">{{currentUser.user.username}}</h3></h3>
         <h3>Phone Number:<h3 class="style-h3">{{currentUser.user.phone}}</h3></h3>
         <h3>Jmbg:<h3 class="style-h3">{{currentUser.user.jmbg}}</h3></h3>
-        <h3>Date Of Birth:<h3 class="style-h3">{{currentUser.user.dob}}</h3></h3>        
+        <h3>Date Of Birth:<h3 class="style-h3">{{currentUser.user.dob}}</h3></h3>                
     </div>
-    
+
+    <div style="text-align: center;">
+        <button (click)="data(currentUser.user)" class="form-btn" mat-raised-button type="button">{{!isOpened ? 'Edit Profile' : 'Close'}}</button>
+    </div>
+
 </div>
 
-<div *ngIf="(currentUser | json) != '{}' && loginService.checkIfAllowed('ROLE_ADMIN')" style="display: flex;justify-content: center;">
+<div *ngIf="(currentUser | json) != '{}' && loginService.checkIfAllowed('ROLE_ADMIN')" style="display: flex;justify-content: center; flex-direction: column; align-items: center;margin-top: 50px;">
     <div>
         
         <h3>First Name: <h3 class="style-h3">{{currentUser.firstName}}</h3></h3>
@@ -34,5 +41,57 @@
         <h3>Jmbg:<h3 class="style-h3">{{currentUser.jmbg}}</h3></h3>
         <h3>Date Of Birth:<h3 class="style-h3">{{currentUser.dob}}</h3></h3>        
     </div>
+
+    <div style="text-align: center;">
+        <button (click)="data(currentUser)" class="form-btn" mat-raised-button type="button">{{!isOpened ? 'Edit Profile' : 'Close'}}</button>
+    </div>
     
 </div>
+
+<div *ngIf="(currentUser | json) != '{}' && loginService.checkIfAllowed('ROLE_STUDENT_ADMINISTRATION')" style="display: flex;justify-content: center; flex-direction: column; align-items: center;margin-top: 50px;">
+    <div>
+        
+        <h3>First Name: <h3 class="style-h3">{{currentUser.firstName}}</h3></h3>
+        <h3>Last Name:<h3 class="style-h3">{{currentUser.lastName}}</h3></h3>
+        <h3>Email:<h3 class="style-h3">{{currentUser.email}}</h3></h3>
+        <h3>Username:<h3 class="style-h3">{{currentUser.username}}</h3></h3>
+        <h3>Phone Number:<h3 class="style-h3">{{currentUser.phone}}</h3></h3>
+        <h3>Jmbg:<h3 class="style-h3">{{currentUser.jmbg}}</h3></h3>
+        <h3>Date Of Birth:<h3 class="style-h3">{{currentUser.dob}}</h3></h3>        
+    </div>
+
+    <div style="text-align: center;">
+        <button (click)="data(currentUser)" class="form-btn" mat-raised-button type="button">{{!isOpened ? 'Edit Profile' : 'Close'}}</button>
+    </div>
+    
+</div>
+
+
+
+    
+    <div *ngIf="isOpened" style="width: 20%; margin: 80px auto;padding: 30px;border-radius: 8px;background-color: rgb(77, 83, 96);
+        box-shadow: 1px 8px 3px rgb(77, 83, 96);">
+        <form action="" style="display: flex;flex-direction: column;" (submit)="create()" [formGroup]="myProfileForm">
+          
+          <mat-form-field>
+            <mat-label>Email:</mat-label>
+            <input type="email" matInput formControlName="email">
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password:</mat-label>
+            <input type="password" matInput formControlName="password">
+          </mat-form-field>
+          
+          <mat-form-field>
+            <mat-label>Phone Number:</mat-label>
+            <input type="text" matInput formControlName="phone">
+          </mat-form-field>
+      
+          <div style="width: 100%;text-align:center;">
+            <hr style="background-color: rgb(222, 215, 215);">
+              <button class="form-btn" style="margin-right: 20px;" mat-raised-button type="submit">Edit</button>
+              <button class="form-btn" mat-raised-button (click)="reset()" type="button">Reset</button>
+          </div>
+      </form>
+    </div>

@@ -1,4 +1,8 @@
 <div class="mat-elevation-z8" class="full-width-table">
+  <h2>Faculties</h2>
+
+  <hr>
+  
   <table mat-table [dataSource]="dataSource" matSort aria-label="Elements">
     
     <ng-container matColumnDef="id">
@@ -11,6 +15,11 @@
       <td mat-cell *matCellDef="let row">{{row.name}}</td>
     </ng-container>
 
+    <ng-container matColumnDef="deanId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Dean</th>
+      <td mat-cell *matCellDef="let row">{{row.deanId}}</td>
+    </ng-container>
+
     <ng-container matColumnDef="address">
       <th mat-header-cell *matHeaderCellDef>Address</th>
       <td mat-cell *matCellDef="let row">{{row.address.street}} {{ row.address.number}} 
@@ -19,7 +28,13 @@
 
     <ng-container matColumnDef="details">
       <th mat-header-cell *matHeaderCellDef style="text-align: center;">Details</th>
-      <td mat-cell *matCellDef="let element" style="text-align: center;"><button *ngIf="!allowEditAndDelete" style="background-color: #4c525f;color:rgb(222, 215, 215);
+      <td mat-cell *matCellDef="let element" style="text-align: center;">
+        
+        <button mat-fab (click)="showNotifications(element.id)"  *ngIf="!allowEditAndDelete" style="width: 40px; height: 40px; margin-right: 7px; vertical-align:middle;" color="primary">
+          <mat-icon>info</mat-icon>
+        </button>
+      
+      <button *ngIf="!allowEditAndDelete" style="background-color: #4c525f;color:rgb(222, 215, 215);
       margin-right: 10px;"
          (click)="getStudyPrograms(element.id)" mat-raised-button color="primary">Study Programs</button>
 
