@@ -21,7 +21,7 @@ export class CurrentSubjectsComponent {
 
   notifications:any[] = [];
 
-  displayedColumns = ['id', 'name','finalGrade','ects','numberOfLectures','numberOfPracticalLectures','numberOfAttempts','details'];
+  displayedColumns = ['id', 'name','finalGrade','points','ects','numberOfLectures','numberOfPracticalLectures','numberOfAttempts','details'];
 
   ngOnInit(){
     this.fetchCurrentSubjects();

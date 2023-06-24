@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,8 +26,11 @@ export class YearOfStudyComponent {
   isOpened:boolean = false;
   studyPrograms:any[] = [];
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
+
   constructor(private yearOfStudyService:YearOfStudyService,private studyProgramService:StudyProgramService,public loginService:LoginService,
-    private router:Router,private route: ActivatedRoute) {}
+    private router:Router,private route: ActivatedRoute,private snackBar:MatSnackBar) {}
  
   ngOnInit(){
     this.fetchStudyPrograms();
@@ -48,11 +53,13 @@ export class YearOfStudyComponent {
     this.showForm();
   }
 
+
   yearOfStudyForm = new FormGroup({
     id:new FormControl(),
-    year:new FormControl(null,Validators.required),    
-    studyProgramId:new FormControl(null,Validators.required)   
-    });
+    year:new FormControl(null,Validators.required),        
+    studyProgram:new FormGroup({
+      id:new FormControl(null,Validators.required)
+    })});
 
   getYearsOfStudyFromStudyProgramId(id:number){
     this.yearOfStudyService.getYearsOfStudyFromStudyProgramId(id).subscribe(response=>{      
@@ -82,14 +89,31 @@ export class YearOfStudyComponent {
 
   create(){
     if(this.yearOfStudyForm.valid){
+
+      let formData = {
+        "id":this.yearOfStudyForm.value.id,
+        "year":this.yearOfStudyForm.value.year,
+        "studyProgramId":this.yearOfStudyForm.value.studyProgram?.id
+      }
+
       if(this.yearOfStudyForm.value.id != null && this.yearOfStudyForm.value.id != undefined){
-        this.yearOfStudyService.update(this.yearOfStudyForm.value.id,this.yearOfStudyForm.value).subscribe((response => {
-          this.fetchYearsOfStudy();            
+        this.yearOfStudyService.update(this.yearOfStudyForm.value.id,formData).subscribe((response => {
+          this.fetchYearsOfStudy();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));
 
       }else{        
-          this.yearOfStudyService.create(this.yearOfStudyForm.value).subscribe((response => {
-            this.fetchYearsOfStudy();                   
+          this.yearOfStudyService.create(formData).subscribe((response => {
+            this.fetchYearsOfStudy();
+            this.snackBar.open("Successfully created new entity!",'',{
+              duration:2000,
+              horizontalPosition:this.horizontalP,
+              verticalPosition:this.verticalP,        
+            })                   
         }));            
       } 
     }
@@ -102,6 +126,14 @@ export class YearOfStudyComponent {
   deleteYearOfStudy(id:number){
     this.yearOfStudyService.delete(id).subscribe((response)=>{
       this.fetchYearsOfStudy();            
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
     })
   }
 

@@ -9,6 +9,7 @@ import { LoginService } from 'src/app/service/login/login.service';
 import { StudentYearService } from 'src/app/service/student/student-year.service';
 import { StudentService } from 'src/app/service/student/student.service';
 import { StudentDetailsPopUpComponent } from '../student-details-pop-up/student-details-pop-up.component';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-student-administration',
@@ -28,10 +29,12 @@ export class StudentAdministrationComponent {
   studentYears:any[] = [];
   yearsOfStudy:any[] = [];
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
 
   constructor(private studentService:StudentService,private yearOfStudyService:YearOfStudyService,
              private studentYearService:StudentYearService,public loginService:LoginService,
-             private studentDetailsPopUp:MatDialog) {}
+             private studentDetailsPopUp:MatDialog,private snackBar:MatSnackBar) {}
 
 ngOnInit(){
   this.fetchStudentYear();
@@ -97,12 +100,22 @@ create(){
 
     if(this.studentServiceForm.value.id != null && this.studentServiceForm.value.id != undefined){
       this.studentYearService.update(this.studentServiceForm.value.id,formValues).subscribe((response => {
-        this.fetchStudentYear();            
+        this.fetchStudentYear();
+        this.snackBar.open("Successfully updated entity!",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })            
       }));
 
     }else{        
         this.studentYearService.create(formValues).subscribe((response => {
-        this.fetchStudentYear();            
+        this.fetchStudentYear();
+        this.snackBar.open("Successfully created new entity!",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })            
       })); 
       console.log(this.studentServiceForm.value);
                  
@@ -130,7 +143,6 @@ showForm(){
 showStudentDetails(studentId:number){
   this.studentService.getStudent(studentId).subscribe((response => {
     this.studentDetails = response;
-    console.log(this.studentDetails);
     this.studentDetailsPopUp.open(StudentDetailsPopUpComponent,{
       data:this.studentDetails
     })

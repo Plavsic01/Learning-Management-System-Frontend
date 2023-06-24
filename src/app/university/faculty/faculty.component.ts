@@ -10,6 +10,8 @@ import { FacultyService } from 'src/app/service/faculty/faculty.service';
 import { LoginService } from 'src/app/service/login/login.service';
 import { UniversityService } from 'src/app/service/university/university.service';
 import { StudentAdminNotificationPopUpComponent } from './student-admin-notification-pop-up/student-admin-notification-pop-up.component';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-faculty',
@@ -28,17 +30,23 @@ export class FacultyComponent {
   addresses:any[] = [];
   universities:any[] = [];
   isOpened:boolean = false;
+
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
   
   constructor(private facultyService:FacultyService,private addressService:AddressService,private universityService:UniversityService,
-    private notificationsDetails:MatDialog,public loginService:LoginService,private router:Router,private route: ActivatedRoute) {}
+    private notificationsDetails:MatDialog,public loginService:LoginService,private router:Router,private route: ActivatedRoute,
+    private snackBar:MatSnackBar) {}
  
   ngOnInit(){  
     this.route.params.subscribe(param => {
       this.id = param["id"];
     })
-
-    this.getAddresses();
-    this.getUniversities();
+    if(this.loginService.checkIfAllowed('ROLE_ADMIN')){
+      this.getAddresses();
+      this.getUniversities();
+    }
+    
 
     if(this.id != null || this.id != undefined){
       this.allowEditAndDelete = false;
@@ -68,8 +76,7 @@ export class FacultyComponent {
 
 
   fetchFacultiesFromUniversity(id:number){
-    this.facultyService.getFacultyFromUniversityId(id).subscribe(response=>{     
-      console.log(response);
+    this.facultyService.getFacultyFromUniversityId(id).subscribe(response=>{           
         
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.sort = this.sort;
@@ -85,11 +92,6 @@ export class FacultyComponent {
     });
   }
 
-  fetchFacultyNotifications(facultyId:number){
-    this.facultyService.getNotificationsFromFacultyId(facultyId).subscribe((response => {
-      console.log(response);      
-    }))
-  }
 
   getAddresses(){
     this.addressService.getAddresses().subscribe((response=>{
@@ -111,12 +113,22 @@ export class FacultyComponent {
     if(this.facultyForm.valid){
       if(this.facultyForm.value.id != null && this.facultyForm.value.id != undefined){
         this.facultyService.update(this.facultyForm.value.id,this.facultyForm.value).subscribe((response => {
-          this.fetchFaculties();            
+          this.fetchFaculties();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));
 
       }else{        
           this.facultyService.create(this.facultyForm.value).subscribe((response => {
-          this.fetchFaculties();            
+          this.fetchFaculties();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }
@@ -129,6 +141,14 @@ export class FacultyComponent {
   deleteFaculty(id:number){
     this.facultyService.delete(id).subscribe((response)=>{
       this.fetchFaculties();
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
     })
   }
 

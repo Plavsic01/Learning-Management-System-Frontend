@@ -24,12 +24,12 @@ export class StudentService {
     return this.http.get<any>(`http://localhost:8080/api/user/students/userId/${id}`);
   }
 
-  createStudent(faculty:any){
-    return this.http.post<any>("http://localhost:8080/api/user/students",faculty);
+  createStudent(student:any){
+    return this.http.post<any>("http://localhost:8080/api/user/students",student);
   }
 
-  updateStudent(id:number,faculty:any){
-    return this.http.put<any>(`http://localhost:8080/api/user/students/${id}`,faculty);
+  updateStudent(id:number,student:any){
+    return this.http.put<any>(`http://localhost:8080/api/user/students/${id}`,student);
   }
 
   deleteStudent(id:number){

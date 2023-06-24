@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,8 +18,7 @@ import { UniversityService } from 'src/app/service/university/university.service
 export class UniversityComponent  {
 
   addresses:any[] = [];
-  isOpened:boolean = false;
-  allowEditAndDelete:boolean | undefined;
+  isOpened:boolean = false;  
   
   dataSource!:MatTableDataSource<any>;
   displayedColumns = ['id', 'name','rectorId','dateOfEstablishment','phone','email','address','details'];
@@ -25,11 +26,17 @@ export class UniversityComponent  {
   @ViewChild(MatPaginator) paginator!:MatPaginator;
   
   constructor(private universityService:UniversityService,private addressService:AddressService,
-            public loginService:LoginService,private router:Router,private route: ActivatedRoute) {}
+            public loginService:LoginService,private router:Router,private snackBar:MatSnackBar) {}
  
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
+
   ngOnInit(){
     this.fetchUniversities();
-    this.getAddresses();
+    if(this.loginService.checkIfAllowed('ROLE_ADMIN')){
+      this.getAddresses();
+    }
+    
   }
 
   data(element:any){          
@@ -62,9 +69,7 @@ export class UniversityComponent  {
 
   getAddresses(){
     this.addressService.getAddresses().subscribe((response=>{
-      this.addresses = response;
-      console.log(response);
-      
+      this.addresses = response;            
     }))
   }
 
@@ -79,12 +84,22 @@ export class UniversityComponent  {
 
       if(this.universityForm.value.id != null && this.universityForm.value.id != undefined){
         this.universityService.update(this.universityForm.value.id,this.universityForm.value).subscribe((response => {
-          this.fetchUniversities();            
+          this.fetchUniversities();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));
 
       }else{        
           this.universityService.create(this.universityForm.value).subscribe((response => {
-          this.fetchUniversities();            
+          this.fetchUniversities();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }
@@ -97,6 +112,14 @@ export class UniversityComponent  {
   deleteUniversity(id:number){
     this.universityService.delete(id).subscribe((response)=>{
       this.fetchUniversities();
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
     })
   }
 

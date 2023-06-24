@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,8 +20,10 @@ export class PrivilegeComponent {
   displayedColumns = ['id','roleName','details'];
   isOpened:boolean = false;
 
-  constructor(private privilegeService:PrivilegesService,private router:Router,private route: ActivatedRoute){}
+  constructor(private privilegeService:PrivilegesService,private router:Router,private route: ActivatedRoute,private snackBar:MatSnackBar){}
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
 
   ngOnInit(){      
     this.fetchPrivileges();      
@@ -49,12 +53,22 @@ export class PrivilegeComponent {
     if(this.privilegeForm.valid){
       if(this.privilegeForm.value.id != null && this.privilegeForm.value.id != undefined){
         this.privilegeService.update(this.privilegeForm.value.id,this.privilegeForm.value).subscribe((response => {
-          this.fetchPrivileges();            
+          this.fetchPrivileges();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));
 
       }else{        
           this.privilegeService.create(this.privilegeForm.value).subscribe((response => {
-          this.fetchPrivileges();            
+          this.fetchPrivileges();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }
@@ -68,6 +82,15 @@ export class PrivilegeComponent {
   deletePrivilege(id:number){
     this.privilegeService.delete(id).subscribe((response)=>{
       this.fetchPrivileges();
+      
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
     })
   }
 

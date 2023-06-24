@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,8 +24,12 @@ export class StudyProgramComponent {
   id!:number;
   isOpened:boolean = false;
   faculties:any[] = [];
+
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
+
   constructor(private studyProgramService:StudyProgramService,private facultyService:FacultyService,public loginService:LoginService,
-    private router:Router,private route: ActivatedRoute) {}
+    private router:Router,private route: ActivatedRoute,private snackBar:MatSnackBar) {}
  
   ngOnInit(){
 
@@ -88,11 +93,21 @@ export class StudyProgramComponent {
       if(this.studyProgramForm.value.id != null && this.studyProgramForm.value.id != undefined){
         this.studyProgramService.update(this.studyProgramForm.value.id,this.studyProgramForm.value).subscribe((response => {
           this.fetchStudyPrograms();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })
         }));
 
       }else{        
           this.studyProgramService.create(this.studyProgramForm.value).subscribe((response => {
-          this.fetchStudyPrograms();            
+          this.fetchStudyPrograms();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }

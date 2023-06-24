@@ -20,6 +20,11 @@
         <td mat-cell *matCellDef="let row">NaN</td>
       </ng-container>
 
+      <ng-container matColumnDef="points">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Points</th>
+        <td mat-cell *matCellDef="let row">{{row.points}}</td>
+      </ng-container>
+
       <ng-container matColumnDef="numberOfLectures">
         <th mat-header-cell style="text-align: center;" *matHeaderCellDef>Lectures</th>
         <td mat-cell style="text-align: center;" *matCellDef="let row">{{row.subject.numberOfLectures}}</td>

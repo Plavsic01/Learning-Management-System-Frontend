@@ -5,6 +5,8 @@ import { SubjectService } from 'src/app/service/subject/subject.service';
 import { SubjectDetailsComponent } from './subject-details/subject-details.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { YearOfStudyService } from 'src/app/service/YearOfStudy/year-of-study.service';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-subject',
@@ -17,9 +19,14 @@ export class SubjectComponent {
   allowEditAndDelete:boolean | undefined;
   isOpened:boolean = false;
   yearsOfStudy:any[] = [];
+  isLoaded:any = false;
+  searchText:any = '';
+
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
   
   constructor(private subjectService:SubjectService,private yearOfStudyService:YearOfStudyService,
-             private router:Router,private route: ActivatedRoute,private subjectDetails:MatDialog) {}
+             private router:Router,private route: ActivatedRoute,private subjectDetails:MatDialog,private snackBar:MatSnackBar) {}
  
   ngOnInit(){
 
@@ -66,12 +73,13 @@ export class SubjectComponent {
 
   showSubjectDetails(subjectId:number){
     this.subjectDetails.open(SubjectDetailsComponent,{
-      data:this.subjects[subjectId]
+      data:this.subjects.find(sub => sub.id == subjectId)
     })
   }
 
   fetchSubjects(){
     this.subjectService.getSubjects().subscribe((response => {
+      this.isLoaded = true;
       this.subjects = response;
     }))
   }
@@ -85,7 +93,15 @@ export class SubjectComponent {
   deleteSubject(id:number){
     this.subjectService.delete(id).subscribe((response => {
       this.fetchSubjects();
-    }))
+    }),(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
+    })
   }
 
   create(){
@@ -93,11 +109,21 @@ export class SubjectComponent {
       if(this.subjectForm.value.id != null && this.subjectForm.value.id != undefined){
         this.subjectService.update(this.subjectForm.value.id,this.subjectForm.value).subscribe((response => {
           this.fetchSubjects();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })
         }));
         
       }else{        
           this.subjectService.create(this.subjectForm.value).subscribe((response => {
-          this.fetchSubjects();            
+          this.fetchSubjects();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }

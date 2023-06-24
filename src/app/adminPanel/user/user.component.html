@@ -2,18 +2,23 @@
   <mat-tab label="Users">
   
 <div class="mat-elevation-z8" class="full-width-table">
-    <table mat-table [dataSource]="dataSource" matSort aria-label="Elements">
+
+  <h2>Users</h2>
+  
+    <hr>
+
+    <table mat-table [dataSource]="dataSource | search" matSort aria-label="Elements">
       
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
         <td mat-cell *matCellDef="let row">{{row.id}}</td>
       </ng-container>
         
-      <ng-container matColumnDef="first_name">
+      <ng-container matColumnDef="firstName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
         <td mat-cell *matCellDef="let row">{{row.firstName}}</td>
       </ng-container>
-      <ng-container matColumnDef="last_name">
+      <ng-container matColumnDef="lastName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
         <td mat-cell *matCellDef="let row">{{row.lastName}}</td>
       </ng-container>
@@ -126,7 +131,7 @@
   </form>
 </div>
 </mat-tab>
-
+<mat-tab label="Students"><app-student></app-student></mat-tab>
 <mat-tab label="Privileges"><app-privilege></app-privilege></mat-tab>
 <mat-tab label="User Privileges"><app-user-privilege></app-user-privilege></mat-tab>
 

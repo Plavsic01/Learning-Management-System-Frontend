@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { LoginService } from 'src/app/service/login/login.service';
 import { StudentService } from 'src/app/service/student/student.service';
 import { UserService } from 'src/app/service/user/user.service';
@@ -14,12 +15,15 @@ export class MyProfileComponent {
   currentUser:any = {};
   isOpened:boolean = false;
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
 
   ngOnInit(){  
     this.fetchCurrentUserData();
   }
 
-  constructor(private userService:UserService,private studentService:StudentService,public loginService:LoginService){}
+  constructor(private userService:UserService,private studentService:StudentService,public loginService:LoginService,
+    private snackBar:MatSnackBar){}
 
   data(element:any){
     delete element['password'];          
@@ -64,13 +68,23 @@ export class MyProfileComponent {
           this.myProfileForm.value.password = response['password'];
 
           this.userService.update(this.loginService.user.id,this.myProfileForm.value).subscribe((response => {
-            this.fetchCurrentUserData();            
+            this.fetchCurrentUserData();
+            this.snackBar.open("Successfully Updated Profile 🎉",'',{
+              duration:2000,
+              horizontalPosition:this.horizontalP,
+              verticalPosition:this.verticalP,        
+            })            
           }));          
         }))
 
       }else{
         this.userService.update(this.loginService.user.id,this.myProfileForm.value).subscribe((response => {
-          this.fetchCurrentUserData();            
+          this.fetchCurrentUserData(); 
+          this.snackBar.open("Successfully Updated Profile 🎉",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));
       }
       }          

@@ -1,9 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/service/user/user.service';
 
 @Component({
@@ -15,11 +16,13 @@ export class UserComponent {
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatSort) sort!:MatSort;
   @ViewChild('paginator') paginator!: MatPaginator;
-  displayedColumns = ['id', 'first_name','last_name','dob','phone','jmbg','email','username','details'];
+  displayedColumns = ['id', 'firstName','lastName','dob','phone','jmbg','email','username','details'];
   isOpened:boolean = false;
+  
+  constructor(private userService:UserService,private snackBar:MatSnackBar){}
 
-  constructor(private userService:UserService,private router:Router,private route: ActivatedRoute){}
-
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
 
   ngOnInit(){      
     this.fetchUsers();      
@@ -68,17 +71,32 @@ export class UserComponent {
           this.userService.getUser(this.userForm.value.id).subscribe((response => {
             this.userForm.value.password = response['password'];
             this.userService.update(this.userForm.value.id,this.userForm.value).subscribe((response => {
-              this.fetchUsers();            
+              this.fetchUsers();      
+              this.snackBar.open("Successfully updated entity!",'',{
+                duration:2000,
+                horizontalPosition:this.horizontalP,
+                verticalPosition:this.verticalP,        
+              })      
             }));
           }))
         }else{
           this.userService.update(this.userForm.value.id,this.userForm.value).subscribe((response => {
-            this.fetchUsers();            
+            this.fetchUsers();
+            this.snackBar.open("Successfully updated entity!",'',{
+              duration:2000,
+              horizontalPosition:this.horizontalP,
+              verticalPosition:this.verticalP,        
+            })            
           }));
         }             
       }else{        
           this.userService.create(this.userForm.value).subscribe((response => {
-          this.fetchUsers();            
+          this.fetchUsers();    
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })        
         }));            
       } 
     }
@@ -92,7 +110,16 @@ export class UserComponent {
   deleteUser(id:number){
     this.userService.delete(id).subscribe((response)=>{
       this.fetchUsers();
-    })
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
+    }
+    )
   }
 
   showForm(){

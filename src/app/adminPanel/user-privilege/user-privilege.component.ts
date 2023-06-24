@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrivilegesService } from 'src/app/service/privileges/privileges.service';
@@ -22,8 +23,11 @@ export class UserPrivilegeComponent {
   displayedColumns = ['id','privileges','user','details'];
   isOpened:boolean = false;
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
+
   constructor(private userPrivilegeService:UserPrivilegesService,private userService:UserService,private privilegeService:PrivilegesService,
-            private router:Router,private route: ActivatedRoute){}
+            private router:Router,private route: ActivatedRoute,private snackBar:MatSnackBar){}
 
 
   ngOnInit(){      
@@ -71,12 +75,22 @@ export class UserPrivilegeComponent {
     if(this.userPrivilegeForm.valid){
       if(this.userPrivilegeForm.value.id != null && this.userPrivilegeForm.value.id != undefined){
         this.userPrivilegeService.update(this.userPrivilegeForm.value.id,this.userPrivilegeForm.value).subscribe((response => {
-          this.fetchUserPrivileges();            
+          this.fetchUserPrivileges();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })             
         }));
 
       }else{        
           this.userPrivilegeService.create(this.userPrivilegeForm.value).subscribe((response => {
-          this.fetchUserPrivileges();            
+          this.fetchUserPrivileges();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }

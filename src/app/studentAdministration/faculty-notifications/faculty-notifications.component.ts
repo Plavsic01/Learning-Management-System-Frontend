@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -23,9 +24,11 @@ export class FacultyNotificationsComponent {
   isOpened:boolean = false;
   faculties:any[] = [];
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
 
   constructor(private facultyNotificationService:FacultyNotificationService,private facultyService:FacultyService,
-             public loginService:LoginService) {}
+             public loginService:LoginService,private snackBar:MatSnackBar) {}
 
   ngOnInit(){
     this.getFaculties();
@@ -52,8 +55,7 @@ export class FacultyNotificationsComponent {
     this.facultyNotificationService.getNotifications().subscribe((response => {
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      console.log(response);      
+      this.dataSource.paginator = this.paginator;            
     }))
   }
 
@@ -76,11 +78,21 @@ export class FacultyNotificationsComponent {
       if(this.facultyNotificationForm.value.id != null && this.facultyNotificationForm.value.id != undefined){
         this.facultyNotificationService.update(this.facultyNotificationForm.value.id,this.facultyNotificationForm.value).subscribe((response => {
           this.fetchNotifications();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })
         }));
   
       }else{                          
           this.facultyNotificationService.create(this.facultyNotificationForm.value).subscribe((response => {
           this.fetchNotifications();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })
         })); 
         
       } 

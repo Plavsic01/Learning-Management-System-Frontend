@@ -1,9 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoginService } from 'src/app/service/login/login.service';
 import { StudentService } from 'src/app/service/student/student.service';
+import { SubjectService } from 'src/app/service/subject/subject.service';
+import { NotificationPopUpComponent } from '../notification-pop-up/notification-pop-up.component';
 
 @Component({
   selector: 'app-passed-subjects',
@@ -16,7 +19,7 @@ export class PassedSubjectsComponent {
   @ViewChild(MatSort) sort!:MatSort;
   @ViewChild(MatPaginator) paginator!:MatPaginator;
 
-  displayedColumns = ['id', 'name','points','finalGrade','ects','year','numberOfAttempts'];
+  displayedColumns = ['id', 'name','finalGrade','points','ects','year','numberOfAttempts','details'];
   
   averageGrade:number = 0;
   totalEctsPoints:number = 0;
@@ -25,7 +28,8 @@ export class PassedSubjectsComponent {
     this.fetchPassedSubjects();
   }
 
-  constructor(public loginService:LoginService,private studentService:StudentService){}
+  constructor(public loginService:LoginService,private studentService:StudentService, private subjectService:SubjectService,
+    private notificationDialog:MatDialog){}
 
 
 
@@ -53,7 +57,14 @@ export class PassedSubjectsComponent {
   calcEctsPoints(response: any[]){    
     for(let r of response){
       this.totalEctsPoints += r['subject'].ects;      
-    }
-    
+    }    
+  }
+
+  showPassedSubjectNotifications(subjectId:number){
+    this.subjectService.getNotificationBySubjectId(subjectId).subscribe((response => {
+      this.notificationDialog.open(NotificationPopUpComponent,{
+        data:response
+      })
+    }))    
   }
 }

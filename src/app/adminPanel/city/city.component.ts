@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,8 +24,11 @@ export class CityComponent {
   countries:any[] = [];
   isOpened:boolean = false;
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
+
   constructor(private cityService:CityService,private countryService:CountryService,
-                private router:Router,private route: ActivatedRoute){}
+                private router:Router,private route: ActivatedRoute,private snackBar:MatSnackBar){}
 
 
   ngOnInit(){  
@@ -63,12 +68,22 @@ export class CityComponent {
     if(this.cityForm.valid){
       if(this.cityForm.value.id != null && this.cityForm.value.id != undefined){
         this.cityService.update(this.cityForm.value.id,this.cityForm.value).subscribe((response => {
-          this.fetchCities();            
+          this.fetchCities();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));
 
       }else{        
           this.cityService.create(this.cityForm.value).subscribe((response => {
-          this.fetchCities();            
+          this.fetchCities();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }
@@ -82,6 +97,14 @@ export class CityComponent {
   deleteCity(id:number){
     this.cityService.delete(id).subscribe((response)=>{
       this.fetchCities();
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
     })
   }
 

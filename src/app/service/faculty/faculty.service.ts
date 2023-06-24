@@ -33,6 +33,6 @@ export class FacultyService {
   }
 
   delete(id:number){
-    return this.http.delete<any>(`http://localhost:8080/api/university/university/${id}`);
+    return this.http.delete<any>(`http://localhost:8080/api/university/faculty/${id}`);
   }
 }

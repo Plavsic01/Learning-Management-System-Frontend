@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +20,10 @@ export class CountryComponent {
   displayedColumns = ['id', 'name','details'];
   isOpened:boolean = false;
 
-  constructor(private countryService:CountryService,private router:Router,private route: ActivatedRoute){}
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
+
+  constructor(private countryService:CountryService,private router:Router,private route: ActivatedRoute,private snackBar:MatSnackBar){}
 
 
   ngOnInit(){      
@@ -49,12 +54,22 @@ export class CountryComponent {
     if(this.countryForm.valid){
       if(this.countryForm.value.id != null && this.countryForm.value.id != undefined){
         this.countryService.update(this.countryForm.value.id,this.countryForm.value).subscribe((response => {
-          this.fetchCountries();            
+          this.fetchCountries();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));
 
       }else{        
           this.countryService.create(this.countryForm.value).subscribe((response => {
-          this.fetchCountries();            
+          this.fetchCountries();
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }
@@ -68,6 +83,14 @@ export class CountryComponent {
   deleteCity(id:number){
     this.countryService.delete(id).subscribe((response)=>{
       this.fetchCountries();
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
     })
   }
 

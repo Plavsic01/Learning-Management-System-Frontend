@@ -74,7 +74,7 @@
 <br>
 <hr>
 
-<div *ngIf="allowEditAndDelete" style="text-align: center;">
+<div style="text-align: center;">
 <button *ngIf="loginService.checkIfAllowed('ROLE_ADMIN')" (click)="showForm()" class="form-btn" mat-raised-button type="button">{{!isOpened ? 'Show Form' : 'Close Form'}}</button>
 </div>
 

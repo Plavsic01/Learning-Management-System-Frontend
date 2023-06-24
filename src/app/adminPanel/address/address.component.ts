@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,8 +25,11 @@ export class AddressComponent {
   cities:any[] = [];
   isOpened:boolean = false;
 
+  horizontalP:MatSnackBarHorizontalPosition = 'center';
+  verticalP:MatSnackBarVerticalPosition = 'bottom';
+
   constructor(private addressService:AddressService,private cityService:CityService,
-                private router:Router,private route: ActivatedRoute){}
+                private router:Router,private route: ActivatedRoute,private snackBar:MatSnackBar){}
 
 
   ngOnInit(){  
@@ -65,12 +70,22 @@ export class AddressComponent {
     if(this.addressForm.valid){
       if(this.addressForm.value.id != null && this.addressForm.value.id != undefined){
         this.addressService.update(this.addressForm.value.id,this.addressForm.value).subscribe((response => {
-          this.fetchAddresses();            
+          this.fetchAddresses();
+          this.snackBar.open("Successfully updated entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })             
         }));
 
       }else{        
           this.addressService.create(this.addressForm.value).subscribe((response => {
-          this.fetchAddresses();            
+          this.fetchAddresses(); 
+          this.snackBar.open("Successfully created new entity!",'',{
+            duration:2000,
+            horizontalPosition:this.horizontalP,
+            verticalPosition:this.verticalP,        
+          })            
         }));            
       } 
     }
@@ -84,6 +99,14 @@ export class AddressComponent {
   deleteAddress(id:number){
     this.addressService.delete(id).subscribe((response)=>{
       this.fetchAddresses();
+    },(error:HttpErrorResponse) => {
+      if(error.status === 400){
+        this.snackBar.open("This entity cannot be deleted because it is used somewhere else! ❌",'',{
+          duration:2000,
+          horizontalPosition:this.horizontalP,
+          verticalPosition:this.verticalP,        
+        })        
+      }
     })
   }
 

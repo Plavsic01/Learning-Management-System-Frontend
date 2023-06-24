@@ -68,9 +68,9 @@
         <input type="number" matInput formControlName="year">
       </mat-form-field>
       
-      <mat-form-field>
+      <mat-form-field formGroupName="studyProgram">
         <mat-label>Choose Study Program:</mat-label>
-        <mat-select formControlName="studyProgramId">
+        <mat-select formControlName="id">
           <mat-option *ngFor="let studyProgram of studyPrograms" [value]="studyProgram.id">{{studyProgram.name}}</mat-option>        
         </mat-select>
       </mat-form-field>

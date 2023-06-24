@@ -1,7 +1,16 @@
 <h1 style="text-align: center; margin-top:30px;">Subjects</h1>
 
+<hr>
+
+<div style="text-align: center; margin-top:50px">
+<mat-form-field style="width: 350px;" *ngIf="isLoaded" class="example-full-width">
+  <mat-label>Search Subjects</mat-label>
+  <input [(ngModel)]="searchText" matInput>
+</mat-form-field>
+</div>
+
 <div  class="card-div">
- <mat-card class="example-card" *ngFor="let subject of subjects;let i = index">
+ <mat-card class="example-card" *ngFor="let subject of subjects | search: searchText; let i = index">
     <mat-card-header>
       <mat-card-subtitle style="color: rgb(222, 215, 215);">{{subject.yearOfStudy.studyProgram.name}}</mat-card-subtitle>
       <mat-card-title style="text-transform: uppercase;">{{subject.name}}</mat-card-title>
@@ -12,14 +21,14 @@
     <mat-card-actions>
       <button (click)="data(subject)" style="margin-right:10px;color: rgb(222, 215, 215);" *ngIf="allowEditAndDelete" mat-button>Edit</button>
       <button (click)="deleteSubject(subject.id)" style="margin-right:10px;color: rgba(228, 72, 72, 0.998);"*ngIf="allowEditAndDelete" mat-button>Remove</button>
-      <button style="color: rgb(222, 215, 215);" mat-button (click)="showSubjectDetails(i)">Details</button>
+      <button style="color: rgb(222, 215, 215);" mat-button (click)="showSubjectDetails(subject.id)">Details</button>
     </mat-card-actions>
   </mat-card>
 </div>
 
 <hr style="margin-top:60px;">
 
-<div *ngIf="allowEditAndDelete" style="text-align: center;margin-top:40px;">
+<div *ngIf="allowEditAndDelete && isLoaded" style="text-align: center;margin-top:40px;">
   <button (click)="showForm()" class="form-btn" mat-raised-button type="button">{{!isOpened ? 'Show Form' : 'Close Form'}}</button>
   </div>
   
